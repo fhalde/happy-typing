@@ -1,33 +1,28 @@
-var BACK_SPACE = 8;
-var input_buffer = [];
-
-$(window).load(function() {
-    start();
-});
+"use strict";
 
 function start() {
-    $(document).keypress(function(e) {
-        inputs_focus_free = $(":input:focus").length == 0;
-        if (inputs_focus_free) {
+	var back_space = 8;
+	var input_buffer = [];
+
+    $(document).keypress(function (e) {
+        if ($(":input:focus").length === 0) {
             input_buffer.push(e.keyCode);
         }
     });
 
-    $(document).keydown(function(e) {
-        inputs_focus_free = $(":input:focus").length == 0;
-        if (inputs_focus_free && e.keyCode == BACK_SPACE) {
+    $(document).keydown(function (e) {
+        if ($(":input:focus").length === 0 && e.keyCode === back_space) {
             input_buffer.pop();
             e.preventDefault();
         }
     });
 
-    $("input").on("focus", function() {
-        current_input_value = $(this).val();
-        buffer_string_value = "";
-        for (i = 0; i < input_buffer.length; i++) {
-            buffer_string_value += String.fromCharCode(input_buffer[i]);
-        }
-        $(this).val(current_input_value + buffer_string_value);
+    $("input").on("focus", function () {
+        $(this).val($(this).val() + input_buffer.map(String.fromCharCode).join(""));
         input_buffer = [];
     });
 }
+
+$(window).load(function () {
+    start();
+});
